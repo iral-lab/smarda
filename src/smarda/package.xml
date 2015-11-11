@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package>
   <name>smarda</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The smarda package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="john@todo.todo">john</maintainer>
+  <maintainer email="zimmer1@umbc.edu">Megan</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -40,7 +40,17 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>pcl_conversions</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <run_depend>pcl_conversions</run_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
 
+  <build_depend>libpcl-all-dev</build_depend>
+  <run_depend>libpcl-all</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

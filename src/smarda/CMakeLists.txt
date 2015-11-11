@@ -4,7 +4,13 @@ project(smarda)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+	pcl_conversions
+	pcl_ros
+	PCL	
+	roscpp
+	sensor_msgs
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -108,7 +114,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include ${PCL_INCLUDE_DIRS})
 
 ## Declare a C++ library
 # add_library(smarda
@@ -131,6 +137,9 @@ catkin_package(
 # target_link_libraries(smarda_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(point_finder src/point_finder.cc)
+target_link_libraries(point_finder ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 #############
 ## Install ##
