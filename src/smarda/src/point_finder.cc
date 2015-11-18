@@ -23,6 +23,8 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/visualization/cloud_viewer.h>
 
+#include <pcl/io/pcd_io.h>
+
 #if 0
 void cloud_cb(const ros::MessageEvent<sensor_msgs::PointCloud2 const>& event)
 {
@@ -39,11 +41,11 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
 
 	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
 				new pcl::PointCloud<pcl::PointXYZRGB>());
+	pcl::PCDWriter writer;
 	pcl::fromROSMsg(*msg, *cloud);
 	pcl::PassThrough<pcl::PointXYZRGB> pass;
 	pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> ne;
 	pcl::SACSegmentationFromNormals<pcl::PointXYZRGB, pcl::Normal> seg; 
-	pcl::PCDWriter writer;
 	pcl::ExtractIndices<pcl::PointXYZRGB> extract;
 	pcl::ExtractIndices<pcl::Normal> extract_normals;
 	pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(
@@ -145,6 +147,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
 
 	ROS_INFO("Found %zd points on a cylinder\n", 
 					cloud_cylinder->points.size());
+	writer.write<pcl::PointXYZRGB>("/tmp/cylinder.pcd", *cloud_cylinder, true);
 
 	int maxr = 0, maxg = 0, maxb = 0;
 	int avgr = 0, avgg = 0, avgb = 0;
