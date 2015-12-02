@@ -1,0 +1,59 @@
+<launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+        <arg name="robot" default="jaco_arm"/>
+  <arg name="pose" default="-x 0.0 -y 0.0 -z 0.0 -R 0.0 -P 0.0 -Y 0.0"/>
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <!-- <arg name="world" default="empty.world" /> -->
+
+        <env name="GAZEBO_MODEL_PATH" value="$(find jaco_gazebo):$(optenv GAZEBO_MODEL_PATH)"/>
+
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find smarda)/worlds/smarda.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- spawn the robot in simulation -->
+  <include file="$(find jaco_gazebo)/launch/robot_spawn.launch">
+        <arg name="pose" value="$(arg pose)"/>
+        <arg name="robot" value="$(arg robot)"/>
+  </include>
+  <!-- bringup robot and controllers -->
+  <!-- <include file="$(find jaco_gazebo)/launch/$(arg robot)_control.launch">
+  </include> -->
+
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find jaco_arm_gazebo_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+  <!-- If needed, broadcast static tf for robot root -->
+  
+
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/> 
+    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+  </node>
+  
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+  <include file="$(find jaco_arm_gazebo_config)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="true"/>  
+    <arg name="fake_execution" value="true"/>
+    <arg name="info" value="true"/>
+    <arg name="debug" value="true"/>
+  </include>
+
+
+</launch>
