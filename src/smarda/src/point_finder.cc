@@ -242,7 +242,7 @@ int main(int argc, char** argv)
 
 	ROS_INFO("Listening");
 
-	ros::Subscriber color_listener = nh->subscribe("/smarda/colors", 10, color_cb);
+	ros::Subscriber color_listener = nh->subscribe("/smarda/bottle_color", 10, color_cb);
 	location = nh->advertise<std_msgs::String>("/smarda/location", 2); 	
 
 	// Spin
