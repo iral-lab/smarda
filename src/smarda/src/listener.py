@@ -41,7 +41,9 @@ import os
 from std_msgs.msg import String
 
 def callback(data):
-    os.system("rosrun jaco_demo cartesian_workout.py jaco 0.5 0 0.2 1 0 0 0")
+    x,y = [float(x) for x in data.data.split()]
+    print x,y
+    os.system("rosrun jaco_demo cartesian_workout.py jaco %f %f 0.2 1 0 0 0" % (x,y))
 
 def listener():
 
@@ -50,9 +52,9 @@ def listener():
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'talker' node so that multiple talkers can
     # run simultaneously.
-    rospy.init_node('listener', anonymous=True)
+    rospy.init_node('smarda', anonymous=True)
 
-    rospy.Subscriber("chatter", String, callback)
+    rospy.Subscriber("/smarda/location", String, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
