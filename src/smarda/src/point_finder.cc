@@ -38,7 +38,7 @@ enum smarda_colors {
 ros::NodeHandle *nh;
 ros::Subscriber point_cloud;		/* Global kinect subscriber */
 enum smarda_colors current_color;
-
+ros::Publisher location;
 
 static void find_color(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, 
 				int delta, float *x, float *y, float *z)
@@ -131,6 +131,14 @@ static void find_color(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
 			}
 			break;
 	}
+	if (pts < 10) {
+		*x = 0.0;
+		*y = 0.0;
+		*z = 0.0;
+		ROS_INFO("There was no object detected of that color");
+		return;
+	} 
+
 
 
 	avgr /= pts;
@@ -139,14 +147,6 @@ static void find_color(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
 	avgx /=	pts;
 	avgy /= pts;
 	avgz /= pts; 
-
-	if (pts < 10) {
-		*x = 0.0;
-		*y = 0.0;
-		*z = 0.0;
-		ROS_INFO("There was no object detected of that color");
-		return;
-	} 
 
 	ROS_INFO("There's something %d at (%d pts) at approx (%f, %f, %f) (avg color %d, %d, %d)",
 						current_color, pts, avgx, avgy, avgz, avgr, avgg, avgb);
@@ -181,9 +181,30 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
 
 	find_color(cloud_filtered, 50, &x, &y, &z);
 
-	// XXXjc: Transform 
+	// XXXjc: Transform
+	/* 
+	 * sqrt(z^2 + y^2 - height^2) = y_prime
+	 * delta_x = .56
+	 * delta_y = .975
+	 * height = .215
+	 * new x = x -delta_x
+         * new y = y - delta_y;
+         */
+	ROS_INFO("Transforming");
+	float delta_x = 0.68;    /* Measurements */
+	float delta_y = 1.075;   /* Measurements */
+	float x_prime, y_prime;
+	x_prime = -delta_x - x;
+	y_prime = delta_y - sqrt((z*z)+(y*y)+(0.215*0.215));
+	ROS_INFO("Believe translated coordinates are (%f, %f)", x_prime, y_prime);
+	std_msgs::String locmsg;
 
-	// XXXjc: Publish to the arm
+	std::stringstream ss;
+	ss << x_prime << " " << y_prime ;
+	locmsg.data = ss.str();
+	ROS_INFO("Sending %s", locmsg.data.c_str());
+	
+	location.publish(locmsg);
 
 	point_cloud.shutdown();
 
@@ -222,6 +243,7 @@ int main(int argc, char** argv)
 	ROS_INFO("Listening");
 
 	ros::Subscriber color_listener = nh->subscribe("/smarda/colors", 10, color_cb);
+	location = nh->advertise<std_msgs::String>("/smarda/location", 2); 	
 
 	// Spin
 	ros::spin();
