@@ -171,7 +171,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
 	/* Filter out Z ranges beyond 0.9 meters */
 	pass.setInputCloud (cloud);
 	pass.setFilterFieldName ("z");
-	pass.setFilterLimits (0.2, 0.9);
+	pass.setFilterLimits (0.2, 1.5);
 	pass.filter (*cloud_filtered);
 
 	ROS_INFO("PointCloud after filtering has: %zd data points", 
@@ -191,8 +191,8 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
          * new y = y - delta_y;
          */
 	ROS_INFO("Transforming");
-	float delta_x = 0.68;    /* Measurements */
-	float delta_y = 1.075;   /* Measurements */
+	float delta_x = 0.66;    /* Measurements */
+	float delta_y = 1.045;   /* Measurements */
 	float x_prime, y_prime;
 	x_prime = -delta_x - x;
 	y_prime = delta_y - sqrt((z*z)+(y*y)+(0.215*0.215));
