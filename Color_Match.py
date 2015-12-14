@@ -14,9 +14,9 @@ import sys
 colorMatch = dict()
 
 #initialize the colors we already have
-colorMatch["pink"] = ["Acetaminophen",["Tylenol", "Paracetamol" , "Panadol", "Mapap"], ["pain","headache","fever"],325,3250,0]
+colorMatch["red"] = ["Acetaminophen",["Tylenol", "Paracetamol" , "Panadol", "Mapap"], ["pain","headache","fever"],325,3250,0]
 colorMatch["blue"] = ["Guaifenesin", ["Mucinex", "Tussin", "Robitussin Chest Congestion", "Humibid"], ["cough","cold"],300, 2400,0]
-colorMatch["orange"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Diazepam Intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
+colorMatch["green"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Diazepam Intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
 
 
 '''
