@@ -199,6 +199,11 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg)
 	ROS_INFO("Believe translated coordinates are (%f, %f)", x_prime, y_prime);
 	std_msgs::String locmsg;
 
+        if (x == 0.0 && y == 0.0 && z == 0.0) {
+		x_prime = 0.0;
+		y_prime = 0.0;
+	}
+
 	std::stringstream ss;
 	ss << x_prime << " " << y_prime ;
 	locmsg.data = ss.str();
