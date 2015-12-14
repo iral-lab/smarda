@@ -9,6 +9,9 @@
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
+
+
+
 exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
@@ -40,6 +43,7 @@ exports.handler = function (event, context) {
                          context.succeed(buildResponse(sessionAttributes, speechletResponse));
                      });
         } else if (event.request.type === "SessionEndedRequest") {
+
             onSessionEnded(event.request, event.session);
             context.succeed();
         }
@@ -78,10 +82,10 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
 
     // Dispatch to your skill's intent handlers
-    if ("MyColorIsIntent" === intentName) {
-        setColorInSession(intent, session, callback);
-    } else if ("WhatsMyColorIntent" === intentName) {
-        getColorFromSession(intent, session, callback);
+    if ("MardaIntent" === intentName) {
+        setMedicalNeed(intent, session, callback);
+    } else if ("WhatIntent" === intentName) {
+        getMedicalNeedFromSession(intent, session, callback);
     } else if ("AMAZON.HelpIntent" === intentName) {
         getWelcomeResponse(callback);
     } else {
@@ -126,7 +130,7 @@ function getWelcomeResponse(callback) {
 function setMedicalNeed(intent,session,callback)
 {
     var cardTitle = intent.name;
-    var medicationSlot = itnent.slots.Medication;
+    var medicationSlot = intent.slots.Medicine;
     var ailmentSlot = intent.slots.Ailment;
     var repromptText = "";
     var sessionAttributes = {};
@@ -135,14 +139,31 @@ function setMedicalNeed(intent,session,callback)
     
     if (medicationSlot)
     {
-        speechOutput = "Okay,"+"I will try to get you"+medicationSlot+"now";
+        var medicalNeed = medicationSlot.value;
+        sessionAttributes = createMedicalNeedAttributes(medicalNeed);
+        speechOutput = "Okay,"+"I will try to get you"+medicalNeed+",now";
+        
         
     }
-}
+    else
+    {
+        speechOuput = "I'm not quite sure what you need, please try again";
+        repromptText = "You can tell me what you need by saying,"+"I need motrine";
+    }
 
+callback(sessionAttributes,
+             buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+}
+function createMedicalNeedAttributes(medicalNeed)
+{
+    return{
+      medicalNeed : medicalNeed  
+    };
+}
 /**
  * Sets the color in the session and prepares the speech to reply to the user.
  */
+ /**
 function setColorInSession(intent, session, callback) {
     var cardTitle = intent.name;
     var favoriteColorSlot = intent.slots.Color;
@@ -198,8 +219,36 @@ function getColorFromSession(intent, session, callback) {
     // will end.
     callback(sessionAttributes,
              buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+}**/
+function getMedicalNeedFromSession(intent,session,callback)
+{
+    var medicalNeed;
+    var repromptText = null;
+    var sessionAttributes = {};
+    var shouldEndSession=false;
+    var speechOutput = "";
+    if (session.attributes)
+    {
+        medicalNeed = session.attributes.medicalNeed;
+    }
+    if (medicalNeed)
+    {
+        speechOutput = "I will now try to get you"+medicalNeed+"please wait";
+        
+        //WHERE GIT COMMIT NEEDS TO HAPPEN BUT WONT IN THE TEST
+        shouldEndSession = true;
+    }
+    else
+    {
+        speechOutput = "I'm not quite sure what you want, to tell me what you want, say something like"+"I need motrine";
+    }
+    
+    // Setting repromptText to null signifies that we do not want to reprompt the user.
+    // If the user does not respond or says something that is not understood, the session
+    // will end.
+    callback(sessionAttributes,
+             buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
 }
-
 // --------------- Helpers that build all of the responses -----------------------
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
