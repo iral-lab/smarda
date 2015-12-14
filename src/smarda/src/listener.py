@@ -42,8 +42,11 @@ from std_msgs.msg import String
 
 def callback(data):
     x,y = [float(x) for x in data.data.split()]
-    print x,y
-    os.system("rosrun jaco_demo cartesian_workout.py jaco %f %f 0.2 1 0 0 0" % (x,y))
+    if x == 0 and y == 0:
+        print "Nothing happened."
+    else:
+        print x,y
+        os.system("rosrun jaco_demo cartesian_workout.py jaco %f %f 0.2 1 0 0 0" % (x,y))
 
 def listener():
 
