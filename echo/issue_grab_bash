@@ -1,0 +1,6 @@
+#!/bin/bash
+exec > issues.txt
+set -x
+echo "Pulling issues from github"
+ghi list
+echo "made the ghi list"
