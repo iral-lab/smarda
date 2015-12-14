@@ -16,6 +16,6 @@ def talker():
 
 if __name__ == '__main__':
     try:
-        SMARDA()
+        talker()
     except rospy.ROSInterruptException:
         pass
