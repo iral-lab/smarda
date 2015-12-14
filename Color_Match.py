@@ -14,9 +14,9 @@ import sys
 colorMatch = dict()
 
 #initialize the colors we already have
-colorMatch["red"] = ["Acetaminophen",["Tylenol", "Paracetamol" , "Panadol", "Mapap"], ["pain","headache","fever"],325,3250,0]
-colorMatch["blue"] = ["Guaifenesin", ["Mucinex", "Tussin", "Robitussin Chest Congestion", "Humibid"], ["cough","cold"],300, 2400,0]
-colorMatch["green"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Diazepam Intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
+colorMatch["red"] = ["acetaminophen",["advil", "tylenol", "paracetamol" , "panadol", "mapap"], ["pain","headache","fever"],325,3250,0]
+colorMatch["blue"] = ["guaifenesin", ["mucinex", "tussin", "robitussin chest congestion", "humibid"], ["cough","cold"],300, 2400,0]
+colorMatch["green"] = ["diazepam", ["valium", "diastat", "diastat acudial", "diazepam intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
 
 
 '''
@@ -29,13 +29,31 @@ colorMatch["green"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Dia
 
 def main():
 
-    #given a feature, find the medicine
-    #feature = sys.argv[1]
-    #you can hardcode this if you want
-    #hardcoded for now
-    feature = "fever"
+   #open the issues file
+    fileName = "issues.txt"
+    issueFile = open(fileName, 'r')
+    issueFile.seek(65)
+    line = ((issueFile.readline()).strip())
+    #print(line)
+    feature = line
+    #print(feature)
+    
     color = ""
     color_file = open("color_file.txt","w")
+
+    #match key to medicine to color
+    for key in colorMatch.keys():
+        #print("key ", key)
+        #print("feature ", feature)
+        #print("at this index ", colorMatch[key][1])
+        if feature in colorMatch[key][1]:
+            color_file.write(key)
+            color_file.close()
+            #print(key)
+            quit()
+    color_file.close()
+
+'''
     for key in colorMatch.keys():
         print(key)
         v = colorMatch[key]
@@ -52,8 +70,12 @@ def main():
                     print(key)
                     color_file.close()
                     break
+'''
         
-    main()
+
+main()
+
+
     #input will be given as command line arguments
     #color = sys.argv[1]
     #print "color = "+ color
