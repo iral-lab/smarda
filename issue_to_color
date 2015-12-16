@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Grabbing the issues"
+./issue_grab_bash
+
+echo "Matching to a color"
+python Color_Match.py
+
+echo "Done"

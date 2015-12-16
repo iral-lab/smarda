@@ -4,13 +4,13 @@ project(smarda)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED gazebo REQUIRED COMPONENTS
+find_package(catkin REQUIRED COMPONENTS
 	pcl_conversions
 	pcl_ros
 	PCL	
 	roscpp
 	sensor_msgs
-	gazebo_ros
+  #gazebo_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +106,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES smarda
 #  CATKIN_DEPENDS other_catkin_pkg
-  DEPENDS gazebo_ros
+#DEPENDS gazebo_ros
 )
 
 ###########
