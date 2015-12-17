@@ -14,9 +14,9 @@ import sys
 colorMatch = dict()
 
 #initialize the colors we already have
-colorMatch["pink"] = ["Acetaminophen",["Tylenol", "Paracetamol" , "Panadol", "Mapap"], ["pain", "fever"],325,3250,0]
-colorMatch["blue"] = ["Guaifenesin", ["Mucinex", "Tussin", "Robitussin Chest Congestion", "Humibid"], ["cough","cold"],300, 2400,0]
-colorMatch["orange"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Diazepam Intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
+colorMatch["green"] = ["acetaminophen",["advil", "tylenol", "paracetamol" , "panadol", "mapap"], ["pain","headache","fever"],325,3250,0]
+colorMatch["blue"] = ["guaifenesin", ["mucinex", "tussin", "robitussin chest congestion", "humibid"], ["cough","cold"],300, 2400,0]
+colorMatch["red"] = ["diazepam", ["valium", "diastat", "diastat acudial", "diazepam intensol"],["generalized anxiety", "panic", "phobias"],5,60,0]
 
 
 '''
@@ -28,36 +28,84 @@ colorMatch["orange"] = ["Diazepam", ["Valium", "Diastat", "Diastat AcuDial", "Di
 '''
 
 def main():
+
+   #open the issues file
+    fileName = "issues.txt"
+    issueFile = open(fileName, 'r')
+    issueFile.seek(65)
+    line = ((issueFile.readline()).strip())
+    #print(line)
+    feature = line
+    #print(feature)
+    
+    color = ""
+    color_file = open("color_file.txt","w")
+
+    #match key to medicine to color
+    for key in colorMatch.keys():
+        #print("key ", key)
+        #print("feature ", feature)
+        #print("at this index ", colorMatch[key][1])
+        if feature in colorMatch[key][1]:
+            color_file.write(key)
+            color_file.close()
+            #print(key)
+            quit()
+    color_file.close()
+
+'''
+    for key in colorMatch.keys():
+        print(key)
+        v = colorMatch[key]
+        for i in range(len(v)):
+            try:
+                if feature in v[i]:
+                    color_file.write(key)
+                    print(key)
+                    color_file.close()
+                    break
+            except TypeError:
+                if feature == v[i]:
+                    color_file.write(key)
+                    print(key)
+                    color_file.close()
+                    break
+'''
+        
+
+main()
+
+
     #input will be given as command line arguments
-    color = sys.argv[1]
-    print "color = "+ color
+    #color = sys.argv[1]
+    #print "color = "+ color
     
     #this is where RGB matching call will go
     
     #grab just the drug name
-    drug = colorMatch[color][0]
+    #drug = colorMatch[color][0]
     
-    print "Drug = " + drug 
-    print "Other names: " 
-    for name in colorMatch[color][1]:
-        sys.stdout.write(name + ",")
-    print 
-    print "Uses:"
-    for use in colorMatch[color][2]:
-        sys.stdout.write(use +  ",")
+    #print "Other names: " 
+    #for name in colorMatch[color][1]:
+    #    sys.stdout.write(name + ",")
+    #print 
+    #print "Uses:"
+    #for use in colorMatch[color][2]:
+    #    sys.stdout.write(use +  ",")
         
     #requesting medicine. Since we aren't using generated input, I arbitrarily chose the 'color' variable'
-    medicine = color
-    dose_request = 12
+    #medicine = color
+    #dose_request = 12
     
     #this variable keeps track of whether or not they have hit the closest dosage they can get to the maximum
-    max_dosage = False
-    while max_dosage != True and dose_request != 0:
-        if colorMatch[medicine][-1]+ (colorMatch[medicine][-3]) < colorMatch[medicine][-2]:
-            print("Dose Delivered")
-            colorMatch[medicine][-1]+= (colorMatch[medicine][-3])
-            dose_request -= 1
-        else: 
-            print("You have reached your maximum dosage. Please consult a physician if you are still experiencing unpleasant symptoms")
-            max_dosage = True
-main()
+    #max_dosage = False
+    #while max_dosage != True and dose_request != 0:
+     #   if colorMatch[medicine][-1]+ (colorMatch[medicine][-3]) < colorMatch[medicine][-2]:
+      #      print("Dose Delivered")
+      #      colorMatch[medicine][-1]+= (colorMatch[medicine][-3])
+      #      dose_request -= 1
+      #  else: 
+      #      print("You have reached your maximum dosage. Please consult a physician if you are still experiencing unpleasant symptoms")
+      #      max_dosage = True
+
+
